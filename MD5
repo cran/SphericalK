@@ -1,0 +1,14 @@
+c9865869efe17c44fc3a853eae8bc640 *DESCRIPTION
+84d640f87ffde31411ba5befe5886ec0 *NAMESPACE
+4ec68bfe578478743992c89498c9a32d *R/SphericalK.R
+4ffe327299a83f57064b778a7ec9c59d *data/GUAN.rda
+2270bdec33ab6a3e08a4cd88076b53c7 *data/Hex272.rda
+b909b0ea077c2ad3626aee59e3867f77 *data/Hex92.rda
+03ca11c81f3c5648b3b4c765f2fabf1b *man/GUAN.Rd
+b05b9297ee58359eea14900dc99c9d21 *man/Hex272.Rd
+c50954e26cb41e2cfac40e8d19696f90 *man/Hex92.Rd
+131c8542b02f21f34b096060a2fc7312 *man/SphericalK-package.Rd
+04c6e40bdda117ee1f70e4d5a51be38c *man/sphere_grid.Rd
+c95df72d6497c62627859acc949a07ee *man/sphere_khat.Rd
+6e53560a63ccc4d2d0dbf173bbd13367 *man/sphere_montekhat.Rd
+43f25bfe9fe6ad27ed9c315813ddbd9c *man/sphere_random.Rd
