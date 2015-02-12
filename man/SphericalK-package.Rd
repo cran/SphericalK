@@ -4,10 +4,10 @@
 \docType{package}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Spherical K-function
+Spherical K-Function
 }
 \description{
-Spherical K-function for point-pattern analysis on the sphere
+Spherical K-function for point-pattern analysis on the sphere.
 }
 \details{
 \tabular{ll}{

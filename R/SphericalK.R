@@ -73,7 +73,8 @@ sphere_khat<-function(latitudes,longitudes,dis){
     for (j in 1:r){
       u[i,j]<-sin(phi[i])*sin(phi[j])+
         cos(phi[i])*cos(phi[j])*cos(theta[i]-theta[j])
-      if (u[i,j]<=-1  ) u[i,j]=-1
+      if (u[i,j]<=-1) u[i,j]=-1
+      if (u[i,j]>=1) u[i,j]=1
     }
   }
   diag(u)=0

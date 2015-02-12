@@ -2,7 +2,7 @@
 \alias{Hex92}
 \docType{data}
 \title{
-Global hexagonal grids
+Global Hexagonal Grids
 }
 \description{
 The points are produced by a hexagonal tessellation at a resolution of 92 grid locations to evaluate the point-pattern properties.
