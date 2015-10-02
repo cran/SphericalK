@@ -59,36 +59,32 @@ sphere_grid<-function(degr){
 #' lat<-sphere_random(100)$latitudes; lon<-sphere_random(100)$longitudes
 #' d<-seq(from=0,to=pi,by=0.1)
 #' sphere_khat(lat,lon,d)
-sphere_khat<-function(latitudes,longitudes,dis){
-  if (missing(dis)) dis<-seq(from=0,to=pi,by=0.1)
-  r<-length(latitudes)
-  ndis<-length(dis)
-  dis[ndis]<-pi
-  CSR<-2*pi*(1-cos(dis))
-  phi<-latitudes*pi/180
-  theta<-longitudes*pi/180
-  u<-matrix(0,r,r)
-  delta<-rep(0,r*r)
-  for (i in 1:r){
-    for (j in 1:r){
-      u[i,j]<-sin(phi[i])*sin(phi[j])+
-        cos(phi[i])*cos(phi[j])*cos(theta[i]-theta[j])
-      if (u[i,j]<=-1) u[i,j]=-1
-      if (u[i,j]>=1) u[i,j]=1
+sphere_khat<-function(latitudes, longitudes, dis){
+    if (missing(dis)) dis <- seq(0, pi, length.out = 30)
+    r<-length(latitudes)
+    ndis<-length(dis)
+    dis[ndis]<-pi
+    CSR<-2*pi*(1-cos(dis))
+    phi<-latitudes*pi/180
+    theta<-longitudes*pi/180
+    delta<-rep(0,r*r)
+    sinPhi <- sin(phi) %*% t(sin(phi))
+    cosPhi <- cos(phi) %*% t(cos(phi)) * cos(theta %*% t(rep(1, length(theta))) - t(theta %*% t(rep(1, length(theta)))))
+    u <- sinPhi + cosPhi
+    u[u <= -1] <- -1
+    u[u >= 1] <- 1
+    diag(u)=0
+    delta<-acos(u)
+    diag(delta)<-2*pi
+    delta<-matrix(delta,ncol=1)
+    khat<-rep(0,ndis)
+    for (k in 1:ndis){
+        khat[k]<-sum(delta<=dis[k])
     }
-  }
-  diag(u)=0
-  delta<-acos(u)
-  diag(delta)<-2*pi
-  delta<-matrix(delta,ncol=1)
-  khat<-rep(0,ndis)
-  for (k in 1:ndis){
-    khat[k]<-sum(delta<=dis[k])
-  }
-  khats<-4*pi*khat/(r*(r-1))
-  Khats<-khats-CSR
-  #   list(khats = khats,Khats = Khats)
-  return(Khats)
+    khats<-4*pi*khat/(r*(r-1))
+    Khats<-khats-CSR
+    #   list(khats = khats,Khats = Khats)
+    return(Khats)
 }
 #' K-functions under complete spatial randomness (CSR) by Monte Carlo tests
 #' @description Monte Carlo confidence intervals of K-functions under CSR are provided for point-pattern analysis.
@@ -120,14 +116,14 @@ sphere_khat<-function(latitudes,longitudes,dis){
 #' #Spherical K function (minus CSR) with 99% confidence intervals 
 #' #for point patterns associated with 10 * 10 latitude-longitude grid
 #'
-#' spheregrid<-sphere_grid(10)
-#' latm<-spheregrid$latitudes
-#' lonm<-spheregrid$longitudes
+#' spheregrid<-sphere_grid(25)
+#' latm<-as.vector(spheregrid$latitudes)
+#' lonm<-as.vector(spheregrid$longitudes)
 #' d<-seq(from=0,to=pi,by=0.2)
 #' nd<-length(d)
 #' d[nd]<-pi
 #' khatsg<-sphere_khat(latm,lonm,d)
-#' Kcisg<-sphere_montekhat(100,100,d)
+#' Kcisg<-sphere_montekhat(98,50,d)
 #' plot(d,khatsg,type='n', ylim=c(-0.4,0.4),xlim=c(0,pi),xaxt = "n",
 #' ylab = expression(K - CSR),xlab = expression("Spherical Angle"))
 #' axis(1, at = c(0,pi/6, pi/3, pi/2, 2*pi/3, 5*pi/6, pi),
@@ -174,17 +170,17 @@ sphere_khat<-function(latitudes,longitudes,dis){
 #' lines(d,khatsg,col = 4, lwd=2)
 #' lines(y=c(0,0),x=c(0,pi),type='l',lty=2,lwd=2)
 sphere_montekhat<-function(n,nsim,dis){
-  if (missing(dis)) dis<-seq(from=0,to=pi,by=0.1)
-  if (missing(nsim)) nsim<-1000
-  ndis<-length(dis)
-  dis[ndis]<-pi
-  Kci<-matrix(data=0,nrow=ndis,ncol=nsim)
-  for (i in 1:nsim){
-    randompoints<-sphere_random(n)
-    latr<-randompoints$latitudes
-    lonr<-randompoints$longitudes
-    Kci[,i]<-sphere_khat(latr,lonr,dis)
-  }
-  Kci<-apply(Kci,1,sort)
-  return(Kci)
+    if (missing(dis)) dis<-seq(from=0,to=pi,by=0.1)
+    if (missing(nsim)) nsim<-1000
+    ndis<-length(dis)
+    dis[ndis]<-pi
+    Kci<-matrix(data=0,nrow=ndis,ncol=nsim)
+    for (i in 1:nsim){
+        randompoints<-sphere_random(n)
+        latr<-randompoints$latitudes
+        lonr<-randompoints$longitudes
+        Kci[,i]<-sphere_khat(latr,lonr,dis)
+    }
+    Kci<-apply(Kci,1,sort)
+    return(Kci)
 }
